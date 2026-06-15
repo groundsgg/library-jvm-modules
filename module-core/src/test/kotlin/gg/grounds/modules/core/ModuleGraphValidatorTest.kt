@@ -1,13 +1,13 @@
 package gg.grounds.modules.core
 
 import gg.grounds.modules.ModuleDescriptor
-import gg.grounds.modules.serviceKey
+import gg.grounds.modules.qualifiedServiceKey
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 
 class ModuleGraphValidatorTest {
-    private val service = serviceKey<String>("test.service")
+    private val service = qualifiedServiceKey<String>("test.service")
 
     @Test
     fun `sorts dependencies before dependants`() {

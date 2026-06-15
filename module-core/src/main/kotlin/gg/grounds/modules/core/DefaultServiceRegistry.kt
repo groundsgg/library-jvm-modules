@@ -5,6 +5,11 @@ import gg.grounds.modules.ServiceKey
 import gg.grounds.modules.ServiceRegistry
 import java.util.concurrent.ConcurrentHashMap
 
+/**
+ * Thread-safe [ServiceRegistry] backed by a concurrent map.
+ *
+ * Services are immutable bindings: a key can be registered once and duplicate registration fails.
+ */
 class DefaultServiceRegistry : ServiceRegistry {
     private val services = ConcurrentHashMap<ServiceKey<*>, Any>()
 

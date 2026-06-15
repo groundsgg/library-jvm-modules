@@ -5,25 +5,27 @@ import kotlin.reflect.KClass
 /**
  * Typed service identifier used by [ServiceRegistry].
  *
- * Prefer unqualified type keys created with [serviceKey] for normal services. Use [qualifiedServiceKey]
- * only when multiple services implement the same public contract and callers must choose one explicitly.
+ * Prefer unqualified type keys created with [serviceKey] for normal services. Use
+ * [qualifiedServiceKey] only when multiple services implement the same public contract and callers
+ * must choose one explicitly.
  */
-class ServiceKey<T : Any>(
-    val type: KClass<T>,
-    val qualifier: String? = null,
-) {
+class ServiceKey<T : Any>(val type: KClass<T>, val qualifier: String? = null) {
     /**
      * Stable identifier used in diagnostics and graph validation.
      *
-     * For unqualified keys this is the service type's qualified class name. For qualified keys this is
-     * the explicit qualifier supplied by the API owner.
+     * For unqualified keys this is the service type's qualified class name. For qualified keys this
+     * is the explicit qualifier supplied by the API owner.
      */
-    val id: String = qualifier ?: requireNotNull(type.qualifiedName) {
-        "service key type ${type.simpleName ?: type} must have a qualified name"
-    }
+    val id: String =
+        qualifier
+            ?: requireNotNull(type.qualifiedName) {
+                "service key type ${type.simpleName ?: type} must have a qualified name"
+            }
 
     init {
-        require(qualifier == null || qualifier.isNotBlank()) { "service key qualifier must not be blank" }
+        require(qualifier == null || qualifier.isNotBlank()) {
+            "service key qualifier must not be blank"
+        }
     }
 
     final override fun equals(other: Any?): Boolean {

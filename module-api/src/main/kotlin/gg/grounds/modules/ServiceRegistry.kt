@@ -16,9 +16,7 @@ interface ServiceRegistry {
      */
     fun <T : Any> register(key: ServiceKey<T>, service: T)
 
-    /**
-     * Returns the service registered under [key], or `null` when no service exists.
-     */
+    /** Returns the service registered under [key], or `null` when no service exists. */
     fun <T : Any> get(key: ServiceKey<T>): T?
 
     /**
@@ -30,14 +28,10 @@ interface ServiceRegistry {
         return get(key) ?: throw MissingServiceException(key)
     }
 
-    /**
-     * Returns true when [key] has a registered service.
-     */
+    /** Returns true when [key] has a registered service. */
     fun contains(key: ServiceKey<*>): Boolean = getUntyped(key) != null
 
-    /**
-     * Returns a snapshot of currently registered service keys.
-     */
+    /** Returns a snapshot of currently registered service keys. */
     fun keys(): Set<ServiceKey<*>>
 
     /**
@@ -49,28 +43,20 @@ interface ServiceRegistry {
     fun getUntyped(key: ServiceKey<*>): Any?
 }
 
-/**
- * Registers [service] under the default key for [T].
- */
+/** Registers [service] under the default key for [T]. */
 inline fun <reified T : Any> ServiceRegistry.register(service: T) {
     register(serviceKey<T>(), service)
 }
 
-/**
- * Registers [service] under the default key for [type].
- */
+/** Registers [service] under the default key for [type]. */
 fun <T : Any> ServiceRegistry.register(type: KClass<T>, service: T) {
     register(serviceKey(type), service)
 }
 
-/**
- * Returns the service registered for [T], or `null`.
- */
+/** Returns the service registered for [T], or `null`. */
 inline fun <reified T : Any> ServiceRegistry.get(): T? = get(serviceKey<T>())
 
-/**
- * Returns the service registered for [type], or `null`.
- */
+/** Returns the service registered for [type], or `null`. */
 fun <T : Any> ServiceRegistry.get(type: KClass<T>): T? = get(serviceKey(type))
 
 /**
@@ -87,24 +73,16 @@ inline fun <reified T : Any> ServiceRegistry.require(): T = require(serviceKey<T
  */
 fun <T : Any> ServiceRegistry.require(type: KClass<T>): T = require(serviceKey(type))
 
-/**
- * Returns true when [T] has a registered service.
- */
+/** Returns true when [T] has a registered service. */
 inline fun <reified T : Any> ServiceRegistry.contains(): Boolean = contains(serviceKey<T>())
 
-/**
- * Returns true when [type] has a registered service.
- */
+/** Returns true when [type] has a registered service. */
 fun <T : Any> ServiceRegistry.contains(type: KClass<T>): Boolean = contains(serviceKey(type))
 
-/**
- * Thrown when a required service is not registered.
- */
+/** Thrown when a required service is not registered. */
 class MissingServiceException(key: ServiceKey<*>) :
     IllegalStateException("required service is not registered: $key")
 
-/**
- * Thrown when a service key is registered more than once.
- */
+/** Thrown when a service key is registered more than once. */
 class DuplicateServiceException(key: ServiceKey<*>) :
     IllegalStateException("service is already registered: $key")

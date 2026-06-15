@@ -3,11 +3,20 @@ package gg.grounds.modules.core
 import gg.grounds.modules.ModuleDescriptor
 import gg.grounds.modules.ServiceKey
 
+/** Validated module graph in deterministic startup order. */
 data class ModuleGraph(val descriptors: List<ModuleDescriptor>) {
+    /** Descriptors indexed by module id. */
     val descriptorsById: Map<String, ModuleDescriptor> = descriptors.associateBy { it.id }
 }
 
+/** Validates module descriptors before an application starts modules. */
 object ModuleGraphValidator {
+    /**
+     * Validates module ids, dependency edges, required services, and duplicate provided services.
+     *
+     * Returns a [ModuleGraph] whose descriptors are sorted so dependencies appear before
+     * dependants.
+     */
     fun validate(
         descriptors: Collection<ModuleDescriptor>,
         availableServices: Set<ServiceKey<*>> = emptySet(),
@@ -67,7 +76,13 @@ object ModuleGraphValidator {
     }
 }
 
+/** Deterministically sorts module descriptors by dependency order. */
 object ModuleDependencySorter {
+    /**
+     * Returns [descriptors] sorted so dependencies appear before dependants.
+     *
+     * Throws [IllegalArgumentException] when the dependency graph contains a cycle.
+     */
     fun sort(descriptors: Collection<ModuleDescriptor>): List<ModuleDescriptor> {
         val byId = descriptors.associateBy { it.id }
         val permanent = mutableSetOf<String>()

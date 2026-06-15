@@ -20,19 +20,37 @@ module-core  Default registry implementation, graph validation, dependency sorti
 
 ## Usage
 
+Use type-first access for normal services:
+
 ```kotlin
-val serviceKey = serviceKey<MyService>("example.my-service")
 val registry = DefaultServiceRegistry()
 
-registry.register(serviceKey, MyService())
-val service = registry.require(serviceKey)
+registry.register<MyService>(MyService())
+
+val service = registry.require<MyService>()
 ```
+
+Use qualified keys only when multiple services share the same contract:
+
+```kotlin
+object ExampleServiceKeys {
+    val Primary = qualifiedServiceKey<MyService>("example.my-service.primary")
+    val Secondary = qualifiedServiceKey<MyService>("example.my-service.secondary")
+}
+
+registry.register(ExampleServiceKeys.Primary, primaryService)
+registry.register(ExampleServiceKeys.Secondary, secondaryService)
+```
+
+Validate module descriptors before startup:
 
 ```kotlin
 val graph = ModuleGraphValidator.validate(
     listOf(providerA.descriptor, providerB.descriptor)
 )
 ```
+
+See [Service Registry](docs/service-registry.md) for the service key rules.
 
 ## License
 
